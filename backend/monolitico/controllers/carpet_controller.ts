@@ -16,7 +16,7 @@ class CarpetaController {
 
   async obtenerCarpetas(req: Request, res: Response) {
     try {
-      const carpetas: CarpetaDoc[] = await Carpeta.find();
+      const carpetas: CarpetaDoc[] = await Carpeta.find({ eliminado: false });
       res.status(200).json(carpetas);
     } catch (error) {
       console.error(error);
@@ -26,7 +26,10 @@ class CarpetaController {
 
   async obtenerCarpetaPorId(req: Request, res: Response) {
     try {
-      const carpeta: CarpetaDoc | null = await Carpeta.findById(req.params.id);
+      const carpeta: CarpetaDoc | null = await Carpeta.findById({
+        _id: req.params.id,
+        eliminado: false,
+      });
       if (carpeta) {
         res.status(200).json(carpeta);
       } else {
@@ -58,8 +61,10 @@ class CarpetaController {
 
   async eliminarCarpeta(req: Request, res: Response) {
     try {
-      const carpetaEliminada: CarpetaDoc | null = await Carpeta.findByIdAndDelete(
-        req.params.id
+      const carpetaEliminada: CarpetaDoc | null = await Carpeta.findByIdAndUpdate(
+        req.params.id,
+        { eliminado: true },
+        { new: true }
       );
       if (carpetaEliminada) {
         res.status(200).json(carpetaEliminada);

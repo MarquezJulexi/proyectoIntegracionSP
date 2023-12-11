@@ -28,7 +28,7 @@ class CarpetaController {
     obtenerCarpetas(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const carpetas = yield carpet_model_1.Carpeta.find();
+                const carpetas = yield carpet_model_1.Carpeta.find({ eliminado: false });
                 res.status(200).json(carpetas);
             }
             catch (error) {
@@ -40,7 +40,10 @@ class CarpetaController {
     obtenerCarpetaPorId(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const carpeta = yield carpet_model_1.Carpeta.findById(req.params.id);
+                const carpeta = yield carpet_model_1.Carpeta.findById({
+                    _id: req.params.id,
+                    eliminado: false,
+                });
                 if (carpeta) {
                     res.status(200).json(carpeta);
                 }
@@ -74,7 +77,7 @@ class CarpetaController {
     eliminarCarpeta(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const carpetaEliminada = yield carpet_model_1.Carpeta.findByIdAndDelete(req.params.id);
+                const carpetaEliminada = yield carpet_model_1.Carpeta.findByIdAndUpdate(req.params.id, { eliminado: true }, { new: true });
                 if (carpetaEliminada) {
                     res.status(200).json(carpetaEliminada);
                 }

@@ -28,7 +28,7 @@ class TareaController {
 
   async obtenerTareas(req: Request, res: Response) {
     try {
-      const tareas: TareaDoc[] = await Tarea.find();
+      const tareas: TareaDoc[] = await Tarea.find({eliminado:false});
       res.status(200).json(tareas);
     } catch (error) {
       console.error(error);
@@ -38,7 +38,10 @@ class TareaController {
 
   async obtenerTareaPorId(req: Request, res: Response) {
     try {
-      const tarea: TareaDoc | null = await Tarea.findById(req.params.id);
+      const tarea: TareaDoc | null = await Tarea.findById({
+        _id: req.params.id,
+        eliminado: false,
+      });
       if (tarea) {
         res.status(200).json(tarea);
       } else {
@@ -70,8 +73,10 @@ class TareaController {
 
   async eliminarTarea(req: Request, res: Response) {
     try {
-      const tareaEliminada: TareaDoc | null = await Tarea.findByIdAndDelete(
-        req.params.id
+      const tareaEliminada: TareaDoc | null = await Tarea.findByIdAndUpdate(
+        req.params.id,
+        { eliminado: true },
+        { new: true }
       );
       if (tareaEliminada) {
         res.status(200).json(tareaEliminada);

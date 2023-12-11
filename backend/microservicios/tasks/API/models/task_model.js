@@ -9,7 +9,8 @@ const tareaSchema = new mongoose_1.Schema({
     fechaVencimiento: Date,
     prioridad: String,
     completada: Boolean,
-    usuarioId: String, // Cambiado a un identificador de usuario
+    usuarioId: String,
+    eliminado: { type: Boolean, default: false }
 });
 const Tarea = (0, mongoose_1.model)('Tarea', tareaSchema);
 exports.Tarea = Tarea;

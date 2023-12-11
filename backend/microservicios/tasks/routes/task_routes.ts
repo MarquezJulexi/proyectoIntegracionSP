@@ -9,6 +9,6 @@ task_router.post('/create', tareaController.crearTarea);
 task_router.get('/getall', tareaController.obtenerTareas);
 task_router.get('/get/:id', tareaController.obtenerTareaPorId);
 task_router.put('/update/:id', tareaController.actualizarTarea);
-task_router.delete('/delete/:id', tareaController.eliminarTarea);
+task_router.put('/delete/:id', tareaController.eliminarTarea);
 
 export default task_router;

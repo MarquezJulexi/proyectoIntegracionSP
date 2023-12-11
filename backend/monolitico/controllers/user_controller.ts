@@ -27,7 +27,7 @@ class UsuarioController {
 
   async obtenerUsuarios(req: Request, res: Response) {
     try {
-      const usuarios: UsuarioDoc[] = await Usuario.find();
+      const usuarios: UsuarioDoc[] = await Usuario.find({ eliminado: false });
       res.status(200).json(usuarios);
     } catch (error) {
       console.error(error);
@@ -37,7 +37,10 @@ class UsuarioController {
 
   async obtenerUsuarioPorId(req: Request, res: Response) {
     try {
-      const usuario: UsuarioDoc | null = await Usuario.findById(req.params.id);
+      const usuario: UsuarioDoc | null = await Usuario.findById({
+        _id: req.params.id,
+        eliminado: false,
+      });
       if (usuario) {
         res.status(200).json(usuario);
       } else {
@@ -69,8 +72,10 @@ class UsuarioController {
 
   async eliminarUsuario(req: Request, res: Response) {
     try {
-      const usuarioEliminado: UsuarioDoc | null = await Usuario.findByIdAndDelete(
-        req.params.id
+      const usuarioEliminado: UsuarioDoc | null = await Usuario.findByIdAndUpdate(
+        req.params.id,
+        { eliminado: true },
+        { new: true }
       );
       if (usuarioEliminado) {
         res.status(200).json(usuarioEliminado);

@@ -38,7 +38,7 @@ class TareaController {
     obtenerTareas(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const tareas = yield task_model_1.Tarea.find();
+                const tareas = yield task_model_1.Tarea.find({ eliminado: false });
                 res.status(200).json(tareas);
             }
             catch (error) {
@@ -50,7 +50,10 @@ class TareaController {
     obtenerTareaPorId(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const tarea = yield task_model_1.Tarea.findById(req.params.id);
+                const tarea = yield task_model_1.Tarea.findById({
+                    _id: req.params.id,
+                    eliminado: false,
+                });
                 if (tarea) {
                     res.status(200).json(tarea);
                 }
@@ -84,7 +87,7 @@ class TareaController {
     eliminarTarea(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const tareaEliminada = yield task_model_1.Tarea.findByIdAndDelete(req.params.id);
+                const tareaEliminada = yield task_model_1.Tarea.findByIdAndUpdate(req.params.id, { eliminado: true }, { new: true });
                 if (tareaEliminada) {
                     res.status(200).json(tareaEliminada);
                 }

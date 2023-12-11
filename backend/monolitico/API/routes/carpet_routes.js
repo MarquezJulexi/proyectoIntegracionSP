@@ -11,5 +11,5 @@ carpet_routes.post('/create', carpet_controller_1.carpetaController.crearCarpeta
 carpet_routes.get('/getall', carpet_controller_1.carpetaController.obtenerCarpetas);
 carpet_routes.get('/get/:id', carpet_controller_1.carpetaController.obtenerCarpetaPorId);
 carpet_routes.put('/update/:id', carpet_controller_1.carpetaController.actualizarCarpeta);
-carpet_routes.delete('/delete/:id', carpet_controller_1.carpetaController.eliminarCarpeta);
+carpet_routes.put('/delete/:id', carpet_controller_1.carpetaController.eliminarCarpeta);
 exports.default = carpet_routes;

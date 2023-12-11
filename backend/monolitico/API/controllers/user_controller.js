@@ -38,7 +38,7 @@ class UsuarioController {
     obtenerUsuarios(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const usuarios = yield user_model_1.Usuario.find();
+                const usuarios = yield user_model_1.Usuario.find({ eliminado: false });
                 res.status(200).json(usuarios);
             }
             catch (error) {
@@ -50,7 +50,10 @@ class UsuarioController {
     obtenerUsuarioPorId(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const usuario = yield user_model_1.Usuario.findById(req.params.id);
+                const usuario = yield user_model_1.Usuario.findById({
+                    _id: req.params.id,
+                    eliminado: false,
+                });
                 if (usuario) {
                     res.status(200).json(usuario);
                 }
@@ -84,7 +87,7 @@ class UsuarioController {
     eliminarUsuario(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const usuarioEliminado = yield user_model_1.Usuario.findByIdAndDelete(req.params.id);
+                const usuarioEliminado = yield user_model_1.Usuario.findByIdAndUpdate(req.params.id, { eliminado: true }, { new: true });
                 if (usuarioEliminado) {
                     res.status(200).json(usuarioEliminado);
                 }

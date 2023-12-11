@@ -7,6 +7,7 @@ const carpetaSchema = new mongoose_1.Schema({
     nombre: String,
     descripcion: String,
     usuario: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Usuario' },
+    eliminado: { type: Boolean, default: false },
 });
 const Carpeta = (0, mongoose_1.model)('Carpeta', carpetaSchema);
 exports.Carpeta = Carpeta;

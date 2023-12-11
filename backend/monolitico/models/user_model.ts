@@ -9,6 +9,7 @@ interface UsuarioAttrs {
   correoElectronico: string;
   usuario: string;
   contraseña: string;
+  eliminado: boolean;
 }
 
 export interface UsuarioDoc extends UsuarioAttrs, Document {}
@@ -20,6 +21,7 @@ const usuarioSchema = new Schema({
   correoElectronico: String,
   usuario: String,
   contraseña: String,
+  eliminado: {type: Boolean, default: false},
 });
 
 const Usuario = model<UsuarioDoc>('Usuario', usuarioSchema);

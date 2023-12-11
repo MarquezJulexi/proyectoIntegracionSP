@@ -10,6 +10,7 @@ const usuarioSchema = new mongoose_1.Schema({
     correoElectronico: String,
     usuario: String,
     contraseña: String,
+    eliminado: { type: Boolean, default: false },
 });
 const Usuario = (0, mongoose_1.model)('Usuario', usuarioSchema);
 exports.Usuario = Usuario;

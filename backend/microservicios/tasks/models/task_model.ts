@@ -9,6 +9,7 @@ interface TareaAttrs {
   prioridad: string;
   completada: boolean;
   usuarioId: string; // Cambiado a un identificador de usuario
+  eliminado: boolean;
 }
 
 export interface TareaDoc extends TareaAttrs, Document {}
@@ -20,6 +21,7 @@ const tareaSchema = new Schema({
   prioridad: String,
   completada: Boolean,
   usuarioId: String, // Cambiado a un identificador de usuario
+  eliminado: { type: Boolean, default: false }
 });
 
 const Tarea = model<TareaDoc>('Tarea', tareaSchema);

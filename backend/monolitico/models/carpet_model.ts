@@ -7,6 +7,7 @@ interface CarpetaAttrs {
   nombre: string;
   descripcion: string;
   usuario: UsuarioDoc['_id'];
+  eliminado: boolean;
 }
 
 export interface CarpetaDoc extends CarpetaAttrs, Document {}
@@ -15,6 +16,7 @@ const carpetaSchema = new Schema({
   nombre: String,
   descripcion: String,
   usuario: { type: Schema.Types.ObjectId, ref: 'Usuario' },
+  eliminado: {type: Boolean, default: false},
 });
 
 const Carpeta = model<CarpetaDoc>('Carpeta', carpetaSchema);

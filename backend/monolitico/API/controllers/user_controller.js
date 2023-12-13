@@ -9,22 +9,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.usuarioController = void 0;
 const user_model_1 = require("../models/user_model");
+const bcrypt_1 = __importDefault(require("bcrypt"));
 class UsuarioController {
     crearUsuario(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { nombres, apellidos, fechaNacimiento, correoElectronico, usuario, contraseña } = req.body;
                 const fechaNacimientoo = new Date(fechaNacimiento);
+                const hashContraseña = yield bcrypt_1.default.hash(contraseña, 10);
                 const nuevoUsuario = new user_model_1.Usuario({
                     nombres,
                     apellidos,
                     fechaNacimiento: fechaNacimientoo,
                     correoElectronico,
                     usuario,
-                    contraseña,
+                    contraseña: hashContraseña,
                 });
                 yield nuevoUsuario.save();
                 res.status(201).json(nuevoUsuario);
@@ -98,6 +103,35 @@ class UsuarioController {
             catch (error) {
                 console.error(error);
                 res.status(500).json({ mensaje: 'Error al eliminar usuario' });
+            }
+        });
+    }
+    iniciarSesion(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { usuario, contraseña } = req.body;
+                // Buscar al usuario por su nombre de usuario
+                const usuarioEncontrado = yield user_model_1.Usuario.findOne({
+                    usuario,
+                    eliminado: false,
+                });
+                if (usuarioEncontrado) {
+                    // Verificar la contraseña
+                    const contraseñaValida = yield usuarioEncontrado.compararContraseña(contraseña);
+                    if (contraseñaValida) {
+                        res.status(200).json({ mensaje: 'Inicio de sesión exitoso' });
+                    }
+                    else {
+                        res.status(401).json({ mensaje: 'Contraseña incorrecta' });
+                    }
+                }
+                else {
+                    res.status(404).json({ mensaje: 'Usuario no encontrado' });
+                }
+            }
+            catch (error) {
+                console.error(error);
+                res.status(500).json({ mensaje: 'Error al iniciar sesión' });
             }
         });
     }

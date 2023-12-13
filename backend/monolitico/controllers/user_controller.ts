@@ -2,20 +2,21 @@
 
 import { Request, Response } from 'express';
 import { Usuario, UsuarioDoc } from '../models/user_model';
+import bcrypt from 'bcrypt';
 
 class UsuarioController {
   async crearUsuario(req: Request, res: Response) {
     try {
       const { nombres, apellidos, fechaNacimiento, correoElectronico,usuario,contraseña } = req.body;
       const fechaNacimientoo = new Date(fechaNacimiento);
-      
+      const hashContraseña = await bcrypt.hash(contraseña, 10);
       const nuevoUsuario = new Usuario({
           nombres,
           apellidos,
           fechaNacimiento: fechaNacimientoo,
           correoElectronico, // Agrega aquí los otros atributos
           usuario,
-          contraseña,
+          contraseña: hashContraseña,
       });
       await nuevoUsuario.save();
       res.status(201).json(nuevoUsuario);
@@ -85,6 +86,35 @@ class UsuarioController {
     } catch (error) {
       console.error(error);
       res.status(500).json({ mensaje: 'Error al eliminar usuario' });
+    }
+  }
+  async iniciarSesion(req: Request, res: Response) {
+    try {
+      const { usuario, contraseña } = req.body;
+
+      // Buscar al usuario por su nombre de usuario
+      const usuarioEncontrado: UsuarioDoc | null = await Usuario.findOne({
+        usuario,
+        eliminado: false,
+      });
+
+      if (usuarioEncontrado) {
+        // Verificar la contraseña
+        const contraseñaValida = await usuarioEncontrado.compararContraseña(
+          contraseña
+        );
+
+        if (contraseñaValida) {
+          res.status(200).json({ mensaje: 'Inicio de sesión exitoso' });
+        } else {
+          res.status(401).json({ mensaje: 'Contraseña incorrecta' });
+        }
+      } else {
+        res.status(404).json({ mensaje: 'Usuario no encontrado' });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ mensaje: 'Error al iniciar sesión' });
     }
   }
 }

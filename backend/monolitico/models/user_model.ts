@@ -1,5 +1,5 @@
 // models/Usuario_Model.ts
-
+import bcrypt from 'bcrypt';
 import { Document, Schema, model } from 'mongoose';
 
 interface UsuarioAttrs {
@@ -12,7 +12,9 @@ interface UsuarioAttrs {
   eliminado: boolean;
 }
 
-export interface UsuarioDoc extends UsuarioAttrs, Document {}
+export interface UsuarioDoc extends UsuarioAttrs, Document {
+  compararContraseña(candidata: string): Promise<boolean>;
+}
 
 const usuarioSchema = new Schema({
   nombres: String,
@@ -23,6 +25,12 @@ const usuarioSchema = new Schema({
   contraseña: String,
   eliminado: {type: Boolean, default: false},
 });
+usuarioSchema.methods.compararContraseña = async function (
+  candidata: string
+): Promise<boolean> {
+  const coincide = await bcrypt.compare(candidata, this.contraseña);
+  return coincide;
+};
 
 const Usuario = model<UsuarioDoc>('Usuario', usuarioSchema);
 

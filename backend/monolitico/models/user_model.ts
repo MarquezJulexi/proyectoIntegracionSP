@@ -21,7 +21,7 @@ const usuarioSchema = new Schema({
   apellidos: String,
   fechaNacimiento: Date,
   correoElectronico: String,
-  usuario: String,
+  usuario: {type: String, unique: true},
   contraseña: String,
   eliminado: {type: Boolean, default: false},
 });
